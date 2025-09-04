@@ -70,3 +70,6 @@ ipython_config.py
 # macOS metadata
 .DS_Store
 
+# Database
+data/
+*.db
