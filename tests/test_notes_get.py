@@ -54,5 +54,4 @@ def test_get_note_success_and_not_found():
     # GET non-existing note -> 404
     resp2 = client.get("/notes/99999")
     assert resp2.status_code == 404
-    assert resp2.json() == {"detail": "not found"}
-
+    assert resp2.json() == {"detail": "not found", "code": "not_found"}

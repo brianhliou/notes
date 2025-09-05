@@ -44,7 +44,7 @@ def test_delete_then_get_404():
 
     g = client.get(f"/notes/{note_id}")
     assert g.status_code == 404
-    assert g.json() == {"detail": "not found"}
+    assert g.json() == {"detail": "not found", "code": "not_found"}
 
 
 def test_delete_nonexistent_is_204():
@@ -63,4 +63,3 @@ def test_delete_twice_both_204():
     assert d1.status_code == 204
     d2 = client.delete(f"/notes/{note_id}")
     assert d2.status_code == 204
-

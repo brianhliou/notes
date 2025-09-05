@@ -5,6 +5,7 @@ from typing import Iterator
 
 from sqlmodel import SQLModel, create_engine
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import text
 
 from app.settings import settings
 
@@ -27,3 +28,11 @@ def get_session() -> Iterator[Session]:
     finally:
         db.close()
 
+
+def db_ready() -> bool:
+    try:
+        with Session(engine) as session:
+            session.execute(text("SELECT 1"))
+        return True
+    except Exception:
+        return False

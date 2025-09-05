@@ -63,7 +63,7 @@ def test_patch_not_found_404():
     client = TestClient(app)
     pr = client.patch("/notes/99999", json={"content": "nope"})
     assert pr.status_code == 404
-    assert pr.json() == {"detail": "not found"}
+    assert pr.json() == {"detail": "not found", "code": "not_found"}
 
 
 def test_patch_tags_updates_only_tags():
@@ -78,4 +78,3 @@ def test_patch_tags_updates_only_tags():
     assert data["tags"] == ["x", "y"]
     assert data["title"] == "t"
     assert data["content"] == "c"
-
