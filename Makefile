@@ -1,7 +1,7 @@
 .PHONY: test run migrate-init migrate-rev migrate-up
 
 test:
-	pytest -q
+	pytest -v
 
 run:
 	uvicorn app.main:app --reload

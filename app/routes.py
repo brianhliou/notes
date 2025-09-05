@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 
 from app.db import get_session
 from app.models import Note
-from app.crud import create_note
+from app.crud import create_note, list_notes
 
 
 router = APIRouter()
@@ -25,3 +25,9 @@ class NoteCreate(SQLModel):
 @router.post("/notes", response_model=Note, status_code=status.HTTP_201_CREATED)
 def create_note_endpoint(payload: NoteCreate, db=Depends(get_session)) -> Note:
     return create_note(db, title=payload.title, content=payload.content or "", tags=payload.tags)
+
+
+@router.get("/notes")
+def list_notes_endpoint(db=Depends(get_session)) -> dict:
+    items = list_notes(db)
+    return {"items": items}
