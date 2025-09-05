@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import os
-from typing import Iterator
+from collections.abc import Iterator
 
-from sqlmodel import SQLModel, create_engine
-from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import text
+from sqlalchemy.orm import Session, sessionmaker
+from sqlmodel import create_engine
 
 from app.settings import settings
-
 
 # Ensure the SQLite directory exists; does not trigger a DB connection
 os.makedirs("./data", exist_ok=True)

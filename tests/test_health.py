@@ -1,6 +1,6 @@
 import os
 import sys
-import pytest
+
 from fastapi.testclient import TestClient
 
 # Ensure project root is on sys.path for `import app`

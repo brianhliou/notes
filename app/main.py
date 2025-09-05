@@ -1,7 +1,8 @@
-from fastapi import FastAPI, HTTPException
+from http import HTTPStatus
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from http import HTTPStatus
 
 from app.db import db_ready
 from app.routes import router
@@ -29,7 +30,7 @@ def _status_code_to_machine_code(status_code: int) -> str:
 
 
 @app.exception_handler(HTTPException)
-async def http_exception_handler(_, exc: HTTPException):
+async def http_exception_handler(_: Request, exc: HTTPException) -> JSONResponse:
     detail = exc.detail
     if isinstance(detail, dict) and "detail" in detail:
         msg = str(detail.get("detail"))
@@ -40,7 +41,7 @@ async def http_exception_handler(_, exc: HTTPException):
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(_, exc: RequestValidationError):
+async def validation_exception_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
     errors = exc.errors() or []
     msg = errors[0].get("msg") if errors else "validation error"
     return JSONResponse(status_code=422, content={"detail": msg, "code": "validation_error"})

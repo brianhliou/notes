@@ -1,16 +1,17 @@
 import os
 import sys
+
 import pytest
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 from sqlmodel import SQLModel, create_engine
-from httpx import AsyncClient, ASGITransport
 
 # Ensure project root on path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.main import app as fastapi_app  # noqa: E402
 from app.db import get_session  # noqa: E402
+from app.main import app as fastapi_app  # noqa: E402
 
 
 @pytest.fixture

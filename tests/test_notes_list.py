@@ -11,8 +11,8 @@ from sqlmodel import SQLModel, create_engine
 # Ensure project root on path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.main import app  # noqa: E402
 from app.db import get_session  # noqa: E402
+from app.main import app  # noqa: E402
 
 
 @pytest.fixture(autouse=True)

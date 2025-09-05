@@ -1,6 +1,6 @@
 import asyncio
-import pytest
 
+import pytest
 
 pytestmark = pytest.mark.anyio
 

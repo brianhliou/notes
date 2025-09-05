@@ -1,9 +1,9 @@
 try:
     # Prefer Pydantic v2-compatible settings if available
-    from pydantic_settings import BaseSettings  # type: ignore
-except Exception:  # pragma: no cover
+    from pydantic_settings import BaseSettings
+except ImportError:  # pragma: no cover
     # Fallback: allow defaults via BaseModel when pydantic-settings isn't installed
-    from pydantic import BaseModel as BaseSettings  # type: ignore
+    from pydantic import BaseModel as BaseSettings
 
 
 class Settings(BaseSettings):
@@ -13,4 +13,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-

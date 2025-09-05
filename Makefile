@@ -1,7 +1,7 @@
-.PHONY: test run migrate-init migrate-rev migrate-up
+.PHONY: test run migrate-init migrate-rev migrate-up lint fmt type
 
 test:
-	pytest -vv --cov=app --cov-report=term-missing
+	PYTHONWARNINGS="ignore::ResourceWarning" .venv/bin/pytest -vv && (.venv/bin/mypy app || true)
 
 run:
 	uvicorn app.main:app --reload
@@ -14,3 +14,12 @@ migrate-rev:
 
 migrate-up:
 	PYTHONPATH=. alembic upgrade head
+
+lint:
+	ruff check .
+
+fmt:
+	ruff check . --fix
+
+type:
+	mypy app
