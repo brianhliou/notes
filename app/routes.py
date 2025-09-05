@@ -1,11 +1,11 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlmodel import Field, SQLModel
 
 from app.db import get_session
 from app.models import Note
-from app.crud import create_note, list_notes
+from app.crud import create_note, list_notes, get_note
 
 
 router = APIRouter()
@@ -31,3 +31,11 @@ def create_note_endpoint(payload: NoteCreate, db=Depends(get_session)) -> Note:
 def list_notes_endpoint(db=Depends(get_session)) -> dict:
     items = list_notes(db)
     return {"items": items}
+
+
+@router.get("/notes/{note_id}", response_model=Note)
+def get_note_endpoint(note_id: int, db=Depends(get_session)) -> Note:
+    note = get_note(db, note_id)
+    if not note:
+        raise HTTPException(status_code=404, detail="not found")
+    return note

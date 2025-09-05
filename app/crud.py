@@ -22,3 +22,7 @@ def list_notes(db: Session) -> list[Note]:
     # Order by created_at desc, then id desc for deterministic ties
     stmt = select(Note).order_by(Note.created_at.desc(), Note.id.desc())
     return list(db.execute(stmt).scalars().all())
+
+
+def get_note(db: Session, note_id: int) -> Note | None:
+    return db.get(Note, note_id)
