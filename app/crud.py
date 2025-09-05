@@ -51,3 +51,12 @@ def update_note(
     db.commit()
     db.refresh(note)
     return note
+
+
+def delete_note(db: Session, note_id: int) -> bool:
+    note = db.get(Note, note_id)
+    if not note:
+        return False
+    db.delete(note)
+    db.commit()
+    return True

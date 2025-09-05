@@ -1,11 +1,11 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Response
 from sqlmodel import Field, SQLModel
 
 from app.db import get_session
 from app.models import Note
-from app.crud import create_note, list_notes, get_note, update_note
+from app.crud import create_note, list_notes, get_note, update_note, delete_note
 
 
 router = APIRouter()
@@ -53,3 +53,10 @@ def patch_note_endpoint(note_id: int, payload: NoteUpdate, db=Depends(get_sessio
     if not note:
         raise HTTPException(status_code=404, detail="not found")
     return note
+
+
+@router.delete("/notes/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_note_endpoint(note_id: int, db=Depends(get_session)) -> Response:
+    # Idempotent delete: return 204 even if not found
+    delete_note(db, note_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
