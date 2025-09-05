@@ -1,7 +1,7 @@
 .PHONY: test run migrate-init migrate-rev migrate-up
 
 test:
-	pytest -v
+	pytest -vv --cov=app --cov-report=term-missing
 
 run:
 	uvicorn app.main:app --reload
