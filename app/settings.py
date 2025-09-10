@@ -13,3 +13,10 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# OpenAPI / API metadata
+API_TITLE: str = "Notes API"
+API_SUMMARY: str = "Simple notes with tags"
+API_VERSION: str = "0.3.0"
+API_CONTACT: dict[str, str] = {"name": "Notes Team", "url": "https://example.invalid"}
+API_LICENSE: dict[str, str] = {"name": "MIT"}

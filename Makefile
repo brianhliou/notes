@@ -1,4 +1,4 @@
-.PHONY: test run migrate-init migrate-rev migrate-up lint fmt type
+.PHONY: test run migrate-init migrate-rev migrate-up lint fmt type seed
 
 test:
 	PYTHONWARNINGS="ignore::ResourceWarning" .venv/bin/pytest -vv && (.venv/bin/mypy app || true)
@@ -23,3 +23,6 @@ fmt:
 
 type:
 	mypy app
+
+seed:
+	python -m scripts.seed_notes $(if $(COUNT),--count $(COUNT),) $(if $(RESET),--reset,)

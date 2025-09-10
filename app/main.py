@@ -2,16 +2,44 @@ from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.db import db_ready
 from app.routes import router
-from app.settings import settings
+from app.settings import (
+    API_CONTACT,
+    API_LICENSE,
+    API_SUMMARY,
+    API_TITLE,
+    API_VERSION,
+    settings,
+)
 
-app = FastAPI(title=settings.APP_NAME)
+tags_metadata = [
+    {"name": "Notes", "description": "CRUD over notes."},
+    {"name": "Health", "description": "Liveness and readiness."},
+    {"name": "Meta", "description": "Service metadata."},
+]
+
+app = FastAPI(
+    title=API_TITLE,
+    summary=API_SUMMARY,
+    version=API_VERSION,
+    contact=API_CONTACT,
+    license_info=API_LICENSE,
+    openapi_url="/openapi.json",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_tags=tags_metadata,
+)
 
 
-@app.get("/health")
+@app.get("/", include_in_schema=False)
+def root_redirect() -> RedirectResponse:
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/health", tags=["Health"])
 def health() -> dict:
     return {"status": "ok"}
 
@@ -47,7 +75,7 @@ async def validation_exception_handler(_: Request, exc: RequestValidationError) 
     return JSONResponse(status_code=422, content={"detail": msg, "code": "validation_error"})
 
 
-@app.get("/ready")
+@app.get("/ready", tags=["Health"])
 def ready() -> JSONResponse:
     if db_ready():
         return JSONResponse(status_code=200, content={"status": "ready"})
