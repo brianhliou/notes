@@ -63,3 +63,35 @@ def delete_note(db: Session, note_id: int) -> bool:
     db.delete(note)
     db.commit()
     return True
+
+
+from collections.abc import Iterable
+
+
+def iter_all_notes(db: Session) -> Iterable[Note]:
+    """Yield all notes ordered newest-first (created_at desc, id desc)."""
+    stmt = select(Note).order_by(
+        desc(Note.created_at),  # type: ignore[arg-type]
+        desc(Note.id),  # type: ignore[arg-type]
+    )
+    for note in db.execute(stmt).scalars():
+        yield note
+
+
+def bulk_insert_notes(db: Session, items: list[dict]) -> int:
+    """Insert many notes in one transaction. Returns inserted count."""
+    notes: list[Note] = []
+    for data in items:
+        notes.append(
+            Note(
+                title=data["title"],
+                content=data.get("content", ""),
+                tags=data.get("tags", []),
+                created_at=data.get("created_at", datetime.now(UTC)),
+                updated_at=data.get("updated_at", data.get("created_at", datetime.now(UTC))),
+            )
+        )
+    if notes:
+        db.add_all(notes)
+        db.commit()
+    return len(notes)
