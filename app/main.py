@@ -1,4 +1,5 @@
 from http import HTTPStatus
+import logging
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
@@ -10,7 +11,6 @@ from app.settings import (
     API_CONTACT,
     API_LICENSE,
     API_SUMMARY,
-    API_TITLE,
     API_VERSION,
     settings,
 )
@@ -21,8 +21,18 @@ tags_metadata = [
     {"name": "Meta", "description": "Service metadata."},
 ]
 
+# Configure logging level from settings
+_LEVELS = {
+    "CRITICAL": logging.CRITICAL,
+    "ERROR": logging.ERROR,
+    "WARNING": logging.WARNING,
+    "INFO": logging.INFO,
+    "DEBUG": logging.DEBUG,
+}
+logging.basicConfig(level=_LEVELS.get(settings.LOG_LEVEL.upper(), logging.INFO))
+
 app = FastAPI(
-    title=API_TITLE,
+    title=settings.APP_NAME,
     summary=API_SUMMARY,
     version=API_VERSION,
     contact=API_CONTACT,
