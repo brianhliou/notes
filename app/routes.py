@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Iterable
+from typing import Iterable, Optional
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Request, Response, status
 from fastapi.responses import StreamingResponse
@@ -168,7 +168,7 @@ async def import_notes_endpoint(request: Request, db: Session = Depends(get_sess
         if not isinstance(tags, list) or not all(isinstance(t, str) for t in tags):
             raise HTTPException(status_code=400, detail=f"invalid tags on line {idx}")
 
-        def _parse_dt(value: object, field: str) -> datetime | None:
+        def _parse_dt(value: object, field: str) -> Optional[datetime]:
             if value is None:
                 return None
             if not isinstance(value, str):

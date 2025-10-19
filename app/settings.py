@@ -5,7 +5,7 @@ from typing import Any
 
 try:
     # Prefer Pydantic v2-compatible settings if available
-    from pydantic_settings import BaseSettings
+    from pydantic_settings import BaseSettings  # type: ignore[import-not-found]
     _HAS_PYDANTIC_SETTINGS = True
 except ImportError:  # pragma: no cover
     # Fallback: allow defaults via BaseModel when pydantic-settings isn't installed

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+from typing import List, Optional
 
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
@@ -10,7 +11,7 @@ from app.models import Note
 
 
 def create_note(
-    db: Session, *, title: str, content: str = "", tags: list[str] | None = None
+    db: Session, *, title: str, content: str = "", tags: Optional[List[str]] = None
 ) -> Note:
     note = Note(title=title, content=content or "", tags=tags or [])
     db.add(note)
@@ -28,7 +29,7 @@ def list_notes(db: Session) -> list[Note]:
     return list(db.execute(stmt).scalars().all())
 
 
-def get_note(db: Session, note_id: int) -> Note | None:
+def get_note(db: Session, note_id: int) -> Optional[Note]:
     return db.get(Note, note_id)
 
 
@@ -36,10 +37,10 @@ def update_note(
     db: Session,
     note_id: int,
     *,
-    title: str | None = None,
-    content: str | None = None,
-    tags: list[str] | None = None,
-) -> Note | None:
+    title: Optional[str] = None,
+    content: Optional[str] = None,
+    tags: Optional[List[str]] = None,
+) -> Optional[Note]:
     note = db.get(Note, note_id)
     if not note:
         return None
@@ -49,7 +50,7 @@ def update_note(
         note.content = content
     if tags is not None:
         note.tags = tags
-    note.updated_at = datetime.now(UTC)
+    note.updated_at = datetime.now(timezone.utc)
     db.add(note)
     db.commit()
     db.refresh(note)
@@ -87,8 +88,8 @@ def bulk_insert_notes(db: Session, items: list[dict]) -> int:
                 title=data["title"],
                 content=data.get("content", ""),
                 tags=data.get("tags", []),
-                created_at=data.get("created_at", datetime.now(UTC)),
-                updated_at=data.get("updated_at", data.get("created_at", datetime.now(UTC))),
+                created_at=data.get("created_at", datetime.now(timezone.utc)),
+                updated_at=data.get("updated_at", data.get("created_at", datetime.now(timezone.utc))),
             )
         )
     if notes:

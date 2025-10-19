@@ -42,6 +42,9 @@ Example:
 DATABASE_URL=sqlite:////tmp/notes.db LOG_LEVEL=DEBUG uvicorn app.main:app --reload
 ```
 
+### Troubleshooting
+- `ImportError: cannot import name 'UTC' from 'datetime'`: your interpreter is older than Python 3.11; upgrade Python or use the bundled `.venv`. This error is unrelated to database initialization.
+
 ## Makefile
 ```bash
 make test        # run unit + http tests

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -47,13 +47,13 @@ class NoteUpdate(BaseModel):
     At least one field should be provided by clients at runtime.
     """
 
-    title: str | None = Field(
+    title: Optional[str] = Field(
         default=None, description="New title (1–100 chars).", examples=["Updated title"], min_length=1, max_length=100
     )
-    content: str | None = Field(
+    content: Optional[str] = Field(
         default=None, description="New content.", examples=["Updated body"]
     )
-    tags: list[str] | None = Field(
+    tags: Optional[List[str]] = Field(
         default=None, description="Replace tags.", examples=[["work", "todo"]]
     )
 
@@ -64,7 +64,7 @@ class NoteRead(BaseModel):
     content: str = Field(..., examples=["- apples\n- bananas"])
     tags: list[str] = Field(default_factory=list, examples=[["personal", "shopping"]])
     created_at: datetime = Field(..., examples=["2024-01-01T12:00:00Z"])
-    updated_at: datetime | None = Field(default=None, examples=["2024-01-01T12:34:56Z"])
+    updated_at: Optional[datetime] = Field(default=None, examples=["2024-01-01T12:34:56Z"])
 
 
 class ListNotesResponse(BaseModel):
